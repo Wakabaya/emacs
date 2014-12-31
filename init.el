@@ -23,7 +23,6 @@
 (setq inhibit-startup-message t)
 
 ;; バックアップファイルを作成しない
-;; 危険なので、注意して下さい
 (setq make-backup-files nil)
 
 ;; カーソル位置の桁数をモードライン行に表示する
@@ -68,7 +67,7 @@
 
 ;; ruby end
 (require 'ruby-end)
-
+ 
 ;;inf-ruby
 (require 'inf-ruby)
 (setq inf-ruby-default-implementation "pry")
@@ -94,3 +93,19 @@
 (require 'auto-complete)
 (require 'auto-complete-config)  
 (global-auto-complete-mode t)
+
+;;; helm
+(require 'helm)
+(require 'helm-mode)
+(defadvice helm-mode (around avoid-read-file-name activate)
+  (let ((read-file-name-function read-file-name-function)
+	(completing-read-function completing-read-function))
+    ad-do-it))
+(setq completing-read-function 'my-helm-completing-read-default)
+(defun my-helm-completing-read-default (&rest _)
+  (apply (cond ;; [2014-08-11 Mon]helm版のread-file-nameは重いからいらない
+	  ((eq (nth 1 _) 'read-file-name-internal)
+	   'completing-read-default)
+	  (t
+	   'helm--completing-read-default))
+	 _))
