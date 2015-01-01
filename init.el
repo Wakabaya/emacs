@@ -1,18 +1,21 @@
-;;ctrl-hでバックスペースが使える
+;; ctrl-hでバックスペースが使えるll
 (global-set-key "\C-h" 'delete-backward-char)
 
 ;; カーソル位置の行数をモードライン行に表示する
 (line-number-mode 1)
 (global-linum-mode t)
 
-;;日本語環境下
+;; ctrl-lで指定業へ移動
+(global-set-key "\M-g" 'goto-line)
+
+;; 日本語環境下
 (set-language-environment "Japanese")
 
 ;; 対応する括弧をハイライトする
 (show-paren-mode 1)
 
 ;; 対応する括弧の色の設定
-(setq show-paren-style 'mixed)
+;;(setq show-paren-style 'mixed)
 (set-face-background 'show-paren-match-face "grey")
 (set-face-foreground 'show-paren-match-face "black")
 
@@ -28,11 +31,8 @@
 ;; カーソル位置の桁数をモードライン行に表示する
 (column-number-mode 1)
 
-;; auto-install設定
+;; elispファイルを設置するディレクトリの設定
 (add-to-list 'load-path (expand-file-name "~/.emacs.d/auto-install/"))
-(require 'auto-install)
-(auto-install-update-emacswiki-package-name t)
-(auto-install-compatibility-setup) 
 
 ;; MELPA追加リポジトリの設定
 (require 'package)
@@ -55,6 +55,11 @@
 ;;ruby-mode indent
 (setq ruby-deep-indent-paren-style nil)
 
+;; smart-compile
+(require 'smart-compile)
+(global-set-key (kbd "C-x c") 'smart-compile)
+(global-set-key (kbd "C-x C-x") (kbd "C-x c C-m"))
+
 ;; ruby electric
 (require 'ruby-electric)
 (add-hook 'ruby-mode-hook '(lambda () (ruby-electric-mode t)))
@@ -73,11 +78,6 @@
 (setq inf-ruby-default-implementation "pry")
 (setq inf-ruby-eval-binding "Pry.toplevel_binding")
 (add-hook 'inf-ruby-mode-hook 'ansi-color-for-comint-mode-on)
-
-;; smart-compile
-(require 'smart-compile)
-(global-set-key (kbd "C-x c") 'smart-compile)
-(global-set-key (kbd "C-x C-x") (kbd "C-x c C-m"))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (require 'cl)
@@ -129,3 +129,6 @@
 	  (t
 	   'helm--completing-read-default))
 	 _))
+
+
+
