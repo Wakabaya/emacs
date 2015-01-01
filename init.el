@@ -84,6 +84,27 @@
 
 ;; magit
 (require 'magit)
+(defun my/ssh-add ()
+  (interactive)
+  (let* ((github    "~/.ssh/id_rsa")
+	 (ssh-add
+	  (lambda (filepath)
+	    (unless (string< "" (shell-command-to-string
+				 (concat "ssh-add -l | grep " filepath)))
+	      (shell-command (concat "ssh-add " filepath)))))
+	 match)
+    (goto-char (point-min))
+    (when (search-forward-regexp
+	   "^Remote:   master @ origin (\\(.*\\))" nil t)
+      (setq match (match-string 0))
+      (when (string-match "git@github.com" match)
+	(funcall ssh-add github)))))
+
+
+(defadvice magit-push
+    (around ad-magit-push activate)
+  (my/ssh-add)
+    ad-do-it)
 
 ;; ediff
 (setq ediff-window-setup-function 'ediff-setup-windows-plain)
@@ -103,7 +124,7 @@
     ad-do-it))
 (setq completing-read-function 'my-helm-completing-read-default)
 (defun my-helm-completing-read-default (&rest _)
-  (apply (cond ;; [2014-08-11 Mon]helm版のread-file-nameは重いからいらない
+  (apply (cond
 	  ((eq (nth 1 _) 'read-file-name-internal)
 	   'completing-read-default)
 	  (t
