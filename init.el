@@ -100,7 +100,6 @@
       (when (string-match "git@github.com" match)
 	(funcall ssh-add github)))))
 
-
 (defadvice magit-push
     (around ad-magit-push activate)
   (my/ssh-add)
