@@ -6,7 +6,7 @@
 (global-linum-mode t)
 
 ;; ctrl-lで指定業へ移動
-(global-set-key "\M-g" 'goto-line)
+;; (global-set-key "\M-g" 'goto-line)
 
 ;; 日本語環境下
 (set-language-environment "Japanese")
